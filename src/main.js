@@ -5,11 +5,12 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
 import { getData } from './js/pixabay-api.js';
-import { createMarkUp } from './js/render-functions.js';
+import { createMarkup } from './js/render-functions.js';
 import { form, input, gallery } from './js/refs.js';
 import { loaderShow } from './js/loader.js';
 
 let searchInput = '';
+
 const photosGallery = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
   captionDelay: 250,
@@ -47,7 +48,7 @@ function onFormSubmit(event) {
         });
         loaderShow();
       } else {
-        gallery.insertAdjacentHTML('beforeend', createMarkUp(data.hits));
+        gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
         
         photosGallery.refresh();
         loaderShow();
