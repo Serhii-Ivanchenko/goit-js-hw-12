@@ -174,7 +174,7 @@
 }
 
 .loader {
-  visibility: hidden;
+  display: block;
   margin-left: auto;
   margin-right: auto;
   width: 48px;
@@ -197,6 +197,40 @@
   }
 }
 
-.visible {
-  visibility: visible;
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.load-more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  width: 150px;
+  height: 40px;
+
+  padding: 8px 16px;
+
+  border-radius: 8px;
+  background-color: #4E75FF;
+  border: none;
+
+  color: #FFF;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.5em;
+  letter-spacing: 0.64px;
+
+  transition: background-color 300ms ease-in-out;
+}
+
+.load-more:hover {
+  background-color: #191970;
+}
+
+.hidden {
+  display: none;
 }

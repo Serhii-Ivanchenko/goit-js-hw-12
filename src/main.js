@@ -6,7 +6,7 @@ import 'izitoast/dist/css/iziToast.min.css';
 
 import { getData } from './js/pixabay-api.js';
 import { createMarkup } from './js/render-functions.js';
-import { form, input, gallery } from './js/refs.js';
+import { form, input, gallery, loadMoreBtn } from './js/refs.js';
 import { loaderShow } from './js/loader.js';
 
 let searchInput = '';
@@ -16,11 +16,16 @@ const photosGallery = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
 });
 
+let page = 1;
+let total_pages;
+
 form.addEventListener('submit', onFormSubmit);
+loadMoreBtn.addEventListener('click', loadMoreHandle);
 
 async function onFormSubmit(event) {
   event.preventDefault();
   gallery.innerHTML = '';
+  page = 30;
 
   if (input.value.trim() === '') {
     return iziToast.error({
@@ -36,7 +41,7 @@ async function onFormSubmit(event) {
   loaderShow();
 
   try {
-    const data = await getData(searchInput);
+    const data = await getData(searchInput, page);
     if (data.hits.length === 0) {
       iziToast.error({
         title: '',
@@ -51,11 +56,40 @@ async function onFormSubmit(event) {
       gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
 
       photosGallery.refresh();
-      loaderShow();
+
+      total_pages = data.totalHits / data.hits.length;
+
+      if (page < total_pages) {
+        loadMoreBtn.classList.toggle('hidden');
+      }
     }
   } catch (error) {
     alert(error.message);
   } finally {
     form.reset();
   }
+  loaderShow();
+}
+
+async function loadMoreHandle() {
+  page += 1;
+  loadMoreBtn.classList.toggle('hidden');
+  loaderShow();
+  try {
+    const data = await getData(searchInput, page);
+    gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
+
+    photosGallery.refresh();
+
+    if (page >= total_pages) {
+      loadMoreBtn.classList.toggle('hidden');
+    }
+  } catch (error) {
+    alert(error.message);
+    loadMoreBtn.classList.toggle('hidden');
+  } finally {
+    form.reset();
+  }
+  loaderShow();
+  loadMoreBtn.classList.toggle('hidden');
 }
