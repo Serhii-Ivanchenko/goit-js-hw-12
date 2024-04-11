@@ -81,8 +81,17 @@ async function loadMoreHandle() {
 
     photosGallery.refresh();
 
-    if (page >= total_pages) {
+    if (page >= total_pages && data.totalHits) {
       loadMoreBtn.classList.toggle('hidden');
+
+      iziToast.info({
+        title: '',
+        message:
+          "We're sorry, but you've reached the end of search results!",
+        position: 'bottomRight',
+        timeout: 3000,
+        pauseOnHover: false,
+      });
     }
   } catch (error) {
     alert(error.message);
