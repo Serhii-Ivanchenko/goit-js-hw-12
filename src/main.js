@@ -25,7 +25,7 @@ loadMoreBtn.addEventListener('click', loadMoreHandle);
 async function onFormSubmit(event) {
   event.preventDefault();
   gallery.innerHTML = '';
-  page = 30;
+  page = 1;
 
   if (input.value.trim() === '') {
     return iziToast.error({
@@ -81,13 +81,15 @@ async function loadMoreHandle() {
 
     photosGallery.refresh();
 
+    const galleryItem = document.querySelector('.gallery-item');
+    scrollScreen(galleryItem);
+
     if (page >= total_pages && data.totalHits) {
       loadMoreBtn.classList.toggle('hidden');
 
       iziToast.info({
         title: '',
-        message:
-          "We're sorry, but you've reached the end of search results!",
+        message: "We're sorry, but you've reached the end of search results!",
         position: 'bottomRight',
         timeout: 3000,
         pauseOnHover: false,
@@ -96,9 +98,15 @@ async function loadMoreHandle() {
   } catch (error) {
     alert(error.message);
     loadMoreBtn.classList.toggle('hidden');
-  } finally {
-    form.reset();
   }
   loaderShow();
   loadMoreBtn.classList.toggle('hidden');
+}
+
+function scrollScreen(item) {
+  const galleryItemHeight = item.getBoundingClientRect().height;
+  window.scrollBy({
+    top: galleryItemHeight * 2,
+    behavior: 'smooth',
+  });
 }

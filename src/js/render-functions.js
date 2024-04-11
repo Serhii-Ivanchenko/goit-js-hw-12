@@ -1,3 +1,4 @@
+
 function createMarkup(arr) {
   return arr
     .map(
@@ -30,5 +31,6 @@ function createMarkup(arr) {
     )
     .join('');
 }
+
 
 export { createMarkup };
