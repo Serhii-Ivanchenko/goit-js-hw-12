@@ -8,6 +8,8 @@ import { getData } from './js/pixabay-api.js';
 import { createMarkup } from './js/render-functions.js';
 import { form, input, gallery, loadMoreBtn } from './js/refs.js';
 import { loaderShow } from './js/loader.js';
+import { addLoadMoreBtn, removeLoadMoreBtn } from './js/load-more-btn.js';
+import { scrollScreen } from "./js/scroll-screen";
 
 let searchInput = '';
 
@@ -28,7 +30,7 @@ async function onFormSubmit(event) {
   page = 1;
 
   if (!loadMoreBtn.classList.contains('hidden')) {
-    loadMoreBtn.classList.add('hidden');
+    removeLoadMoreBtn();
   }
 
   if (input.value.trim() === '') {
@@ -63,7 +65,7 @@ async function onFormSubmit(event) {
       totalPages = data.totalHits / data.hits.length;
 
       if (page < totalPages) {
-        loadMoreBtn.classList.remove('hidden');
+        addLoadMoreBtn();
       }
     }
   } catch (error) {
@@ -76,7 +78,7 @@ async function onFormSubmit(event) {
 
 async function loadMoreHandle() {
   page += 1;
-  loadMoreBtn.classList.add('hidden');
+  removeLoadMoreBtn();
   loaderShow();
   try {
     const data = await getData(searchInput, page);
@@ -99,20 +101,12 @@ async function loadMoreHandle() {
     }
   } catch (error) {
     alert(error.message);
-    loadMoreBtn.classList.add('hidden');
+    removeLoadMoreBtn();
   } finally {
     if (page >= totalPages && data.totalHits) {
-      loadMoreBtn.classList.add('hidden');
+      removeLoadMoreBtn();
     }
   }
   loaderShow();
-  loadMoreBtn.classList.remove('hidden');
-}
-
-function scrollScreen(item) {
-  const galleryItemHeight = item.getBoundingClientRect().height;
-  window.scrollBy({
-    top: galleryItemHeight * 2,
-    behavior: 'smooth',
-  });
+  addLoadMoreBtn();
 }
