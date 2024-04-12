@@ -17,7 +17,7 @@ const photosGallery = new SimpleLightbox('.gallery a', {
 });
 
 let page = 1;
-let total_pages;
+let totalPages;
 
 form.addEventListener('submit', onFormSubmit);
 loadMoreBtn.addEventListener('click', loadMoreHandle);
@@ -26,6 +26,10 @@ async function onFormSubmit(event) {
   event.preventDefault();
   gallery.innerHTML = '';
   page = 1;
+
+  if (!loadMoreBtn.classList.contains('hidden')) {
+    loadMoreBtn.classList.add('hidden');
+  }
 
   if (input.value.trim() === '') {
     return iziToast.error({
@@ -51,16 +55,15 @@ async function onFormSubmit(event) {
         timeout: 3000,
         pauseOnHover: false,
       });
-      loaderShow();
     } else {
       gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
 
       photosGallery.refresh();
 
-      total_pages = data.totalHits / data.hits.length;
+      totalPages = data.totalHits / data.hits.length;
 
-      if (page < total_pages) {
-        loadMoreBtn.classList.toggle('hidden');
+      if (page < totalPages) {
+        loadMoreBtn.classList.remove('hidden');
       }
     }
   } catch (error) {
@@ -73,7 +76,7 @@ async function onFormSubmit(event) {
 
 async function loadMoreHandle() {
   page += 1;
-  loadMoreBtn.classList.toggle('hidden');
+  loadMoreBtn.classList.add('hidden');
   loaderShow();
   try {
     const data = await getData(searchInput, page);
@@ -84,9 +87,8 @@ async function loadMoreHandle() {
     const galleryItem = document.querySelector('.gallery-item');
     scrollScreen(galleryItem);
 
-    if (page >= total_pages && data.totalHits) {
-      loadMoreBtn.classList.toggle('hidden');
-
+    if (page >= totalPages && data.totalHits) {
+      loaderShow();
       iziToast.info({
         title: '',
         message: "We're sorry, but you've reached the end of search results!",
@@ -97,10 +99,14 @@ async function loadMoreHandle() {
     }
   } catch (error) {
     alert(error.message);
-    loadMoreBtn.classList.toggle('hidden');
+    loadMoreBtn.classList.add('hidden');
+  } finally {
+    if (page >= totalPages && data.totalHits) {
+      loadMoreBtn.classList.add('hidden');
+    }
   }
   loaderShow();
-  loadMoreBtn.classList.toggle('hidden');
+  loadMoreBtn.classList.remove('hidden');
 }
 
 function scrollScreen(item) {
