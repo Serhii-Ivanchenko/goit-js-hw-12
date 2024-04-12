@@ -11,7 +11,7 @@ import { loaderShow } from './js/loader.js';
 import { addLoadMoreBtn, removeLoadMoreBtn } from './js/load-more-btn.js';
 import { scrollScreen } from "./js/scroll-screen";
 
-let searchInput = '';
+let searchQuery = '';
 
 const photosGallery = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
@@ -43,11 +43,11 @@ async function onFormSubmit(event) {
     });
   }
 
-  searchInput = input.value;
+  searchQuery = input.value;
   loaderShow();
 
   try {
-    const data = await getData(searchInput, page);
+    const data = await getData(searchQuery, page);
     if (data.hits.length === 0) {
       iziToast.error({
         title: '',
@@ -81,7 +81,7 @@ async function loadMoreHandle() {
   removeLoadMoreBtn();
   loaderShow();
   try {
-    const data = await getData(searchInput, page);
+    const data = await getData(searchQuery, page);
     gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
 
     photosGallery.refresh();
