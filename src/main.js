@@ -103,7 +103,7 @@ async function loadMoreHandle() {
     alert(error.message);
     removeLoadMoreBtn();
   } finally {
-    if (page >= totalPages && data.totalHits) {
+    if (page >= totalPages) {
       removeLoadMoreBtn();
     }
   }
