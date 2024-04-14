@@ -91,6 +91,7 @@ async function loadMoreHandle() {
 
     if (page >= totalPages && data.totalHits) {
       loaderShow();
+      removeLoadMoreBtn();
       iziToast.info({
         title: '',
         message: "We're sorry, but you've reached the end of search results!",
@@ -99,14 +100,16 @@ async function loadMoreHandle() {
         pauseOnHover: false,
       });
     }
+    loaderShow();
+    addLoadMoreBtn();
   } catch (error) {
     alert(error.message);
     removeLoadMoreBtn();
-  } finally {
+  }
+  finally {
     if (page >= totalPages) {
       removeLoadMoreBtn();
+      loaderShow();
     }
   }
-  loaderShow();
-  addLoadMoreBtn();
 }
