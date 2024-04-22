@@ -31,6 +31,25 @@
   padding-top: 36px;
 }
 
+.nav {
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+}
+
+
+.nav-list {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+
+.nav-link {
+  display: block;
+  padding: 10px;
+}
+
 .search-form {
   display: flex;
   justify-content: center;
